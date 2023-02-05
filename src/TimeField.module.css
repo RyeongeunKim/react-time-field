@@ -1,0 +1,15 @@
+.time {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.5rem;
+	width: 85px;
+}
+
+.time:focus-within {
+	border: 2px solid black;
+}
+
+.time input {
+	outline: none;
+	border: none;
+}
