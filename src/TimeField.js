@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import classes from './TimeField.module.css';
 
 const TimeField = (props) => {
 	const [state, setState] = useState({
@@ -66,13 +67,9 @@ const TimeField = (props) => {
 	return (
 		<>
 			<div>
-				<label htmlFor="name">tabIndex test 용 input:</label>
-				<input type="text" id="name" name="name" size="10" />
-			</div>
-			<div>
-				<label htmlFor="time">시간 : </label>
-				<div id="time" tabIndex="0">
+				<div id="time" tabIndex="0" className={classes.time}>
 					<input
+						className={classes.input}
 						id="hour"
 						type="text"
 						value={state.hour}
@@ -81,9 +78,11 @@ const TimeField = (props) => {
 						maxLength={2}
 						onKeyDown={handleKyeDown}
 						placeholder="_ _"
+						size="1"
 					/>
 					:
 					<input
+						className={classes.input}
 						id="minutes"
 						type="text"
 						value={state.minutes}
@@ -92,6 +91,7 @@ const TimeField = (props) => {
 						maxLength={2}
 						onKeyDown={handleKyeDown}
 						placeholder="_ _"
+						size="1"
 					/>
 				</div>
 			</div>
