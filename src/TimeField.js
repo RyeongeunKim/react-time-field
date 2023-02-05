@@ -38,6 +38,13 @@ const TimeField = (props) => {
 		}
 	};
 
+	const inputFocus = (id) => {
+		const getRef = refs.current.get(id);
+		const end = getRef.value.length;
+		getRef.focus();
+		getRef.setSelectionRange(end, end); // cursor 맨끝으로 이동
+	};
+
 	const handleChange = (target) => {
 		const { id, value } = target;
 		const inputValue = value.trim();
@@ -47,7 +54,7 @@ const TimeField = (props) => {
 		if (isValid) {
 			// 분 포커스
 			if (isHour && inputValue.length === 2) {
-				refs.current.get(id).focus();
+				inputFocus(id);
 			}
 			setState((prevState) => ({
 				...prevState,
@@ -56,12 +63,12 @@ const TimeField = (props) => {
 		}
 	};
 
-	const handleKyeDown = (e) => {
+	const handleKeyUp = (e) => {
 		if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
 		const {
 			target: { id },
 		} = e;
-		refs.current.get(id).focus();
+		inputFocus(id);
 	};
 
 	return (
@@ -77,10 +84,10 @@ const TimeField = (props) => {
 						onChange={({ target }) => handleChange(target)}
 						ref={(e) => refs.current.set('minutes', e)}
 						maxLength={2}
-						onKeyDown={handleKyeDown}
+						onKeyUp={handleKeyUp}
 						placeholder="_ _"
 						size="1"
-						autocomplete="off"
+						autoComplete="off"
 					/>
 					:
 					<input
@@ -91,10 +98,10 @@ const TimeField = (props) => {
 						onChange={({ target }) => handleChange(target)}
 						ref={(e) => refs.current.set('hour', e)}
 						maxLength={2}
-						onKeyDown={handleKyeDown}
+						onKeyUp={handleKeyUp}
 						placeholder="_ _"
 						size="1"
-						autocomplete="off"
+						autoComplete="off"
 					/>
 				</div>
 			</div>
