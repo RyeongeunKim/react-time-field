@@ -67,6 +67,7 @@ const TimeField = (props) => {
 	return (
 		<>
 			<div>
+				<h3>시간을 입력해주세요</h3>
 				<div id="time" tabIndex="0" className={classes.time}>
 					<input
 						className={classes.input}
@@ -79,6 +80,7 @@ const TimeField = (props) => {
 						onKeyDown={handleKyeDown}
 						placeholder="_ _"
 						size="1"
+						autocomplete="off"
 					/>
 					:
 					<input
@@ -92,6 +94,7 @@ const TimeField = (props) => {
 						onKeyDown={handleKyeDown}
 						placeholder="_ _"
 						size="1"
+						autocomplete="off"
 					/>
 				</div>
 			</div>
