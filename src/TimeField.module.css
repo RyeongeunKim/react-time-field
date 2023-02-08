@@ -3,10 +3,11 @@
 	align-items: center;
 	margin-bottom: 0.5rem;
 	width: 85px;
+	border: 2px solid #7da5e1;
 }
 
 .time:focus-within {
-	border: 2px solid black;
+	border: 2px solid #ff5675;
 }
 
 .time input {
