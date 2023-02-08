@@ -14,27 +14,19 @@ const TimeField = (props) => {
 
 		const numValue = Number(value);
 		const valueLength = value.length;
-		let valid1;
-		let valid2;
-
-		if (isHour) {
-			valid1 = 2;
-			valid2 = 24;
-		} else {
-			if (refs.current.get(id).value === '24' && numValue > 0) {
-				return false;
-			}
-			valid1 = 5;
-			valid2 = 59;
-		}
 
 		if (
-			(valueLength === 1 && numValue > valid1) ||
-			(valueLength === 2 && numValue > valid2)
+			(isHour && numValue > 24) ||
+			(!isHour &&
+				((+refs.current.get(id).value >= 24 && numValue > 0) ||
+					(valueLength <= 1 && numValue > 5) ||
+					(valueLength >= 2 && numValue > 59)))
 		) {
 			return false;
+		} else if (isHour && numValue > 0 && numValue < 10) {
+			return `0${numValue}`;
 		} else {
-			return true;
+			return numValue;
 		}
 	};
 
@@ -47,15 +39,17 @@ const TimeField = (props) => {
 
 	const handleChange = (target) => {
 		const { id, value } = target;
-		const inputValue = value.trim();
 		const isHour = id.toLowerCase().includes('hour');
-		const isValid = getValid(id, inputValue, isHour);
+		const inputValue = getValid(id, value.trim(), isHour);
 
-		if (isValid) {
-			// 분 포커스
-			if (isHour && inputValue.length === 2) {
-				inputFocus(id);
-			}
+		if (isHour && inputValue >= 24 && +refs.current.get(id).value > 0) {
+			const changeId = refs.current.get(id).id;
+			setState((prevState) => ({
+				...prevState,
+				[id]: inputValue,
+				[changeId]: '00',
+			}));
+		} else if (inputValue || inputValue === 0) {
 			setState((prevState) => ({
 				...prevState,
 				[id]: inputValue,
@@ -66,9 +60,17 @@ const TimeField = (props) => {
 	const handleKeyUp = (e) => {
 		if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
 		const {
-			target: { id },
+			target: { id, selectionStart, selectionEnd },
 		} = e;
-		inputFocus(id);
+		const isHour = id.toLowerCase().includes('hour');
+
+		if (
+			(!isHour && e.key === 'ArrowLeft' && selectionStart <= 0) ||
+			(isHour && e.key === 'ArrowRight' && selectionEnd >= 2)
+		) {
+			inputFocus(id);
+			refs.current.get(id).select();
+		}
 	};
 
 	return (
@@ -83,7 +85,7 @@ const TimeField = (props) => {
 						value={state.hour}
 						onChange={({ target }) => handleChange(target)}
 						ref={(e) => refs.current.set('minutes', e)}
-						maxLength={2}
+						maxLength={3}
 						onKeyUp={handleKeyUp}
 						placeholder="_ _"
 						size="1"
@@ -97,7 +99,7 @@ const TimeField = (props) => {
 						value={state.minutes}
 						onChange={({ target }) => handleChange(target)}
 						ref={(e) => refs.current.set('hour', e)}
-						maxLength={2}
+						maxLength={3}
 						onKeyUp={handleKeyUp}
 						placeholder="_ _"
 						size="1"
